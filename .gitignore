@@ -1,0 +1,5 @@
+*.csv
+*.yml
+*.yaml
+.mypy_cache
+poetry.lock
