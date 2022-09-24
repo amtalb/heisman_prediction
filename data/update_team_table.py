@@ -57,8 +57,6 @@ def get_sports_ref_data(cursor, years=range(2000, 2022)):
                     team_abbrev = "PITT"
                 elif team_abbrev == "TEXAS-CHRISTIAN":
                     team_abbrev = "TCU"
-                elif team_abbrev == "BRIGHAM-YOUNG":
-                    team_abbrev = "BYU"
                 try:
                     d = {
                         "team_id": team_abbrev,
