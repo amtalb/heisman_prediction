@@ -3,5 +3,3 @@
 *.yaml
 .mypy_cache
 poetry.lock
-mlruns
-model_run.log
