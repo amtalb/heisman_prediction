@@ -32,8 +32,6 @@ def create_player_table(cursor):
             season float NOT NULL,
             team_abbreviation varchar(30) NOT NULL,
             position char(4) NOT NULL,
-            height float NOT NULL,
-            weight float NOT NULL,
             year varchar(4) NOT NULL,
             games float NOT NULL,
             completed_passes float NOT NULL,
@@ -101,14 +99,118 @@ def create_player_table(cursor):
             averagePPA_standardDowns float NOT NULL,
             averagePPA_passingDowns float NOT NULL,
             votes int NOT NULL,
-            PRIMARY KEY (player_id,season)
+            PRIMARY KEY (player_id,season),
+            CONSTRAINT fk_team
+                    FOREIGN KEY(team_abbreviation, season) 
+                        REFERENCES team(team_id, season)
           );"""
     cursor.execute(sql)
 
 
+def create_prediction_table(cursor):
+    sql = """CREATE TABLE prediction(
+                player_id varchar(50) NOT NULL,
+                team_id varchar(50) NOT NULL,
+                season float NOT NULL,
+                projected_votes float NOT NULL,
+                PRIMARY KEY (player_id,season),
+                CONSTRAINT fk_player
+                    FOREIGN KEY(player_id, season) 
+                        REFERENCES player(player_id, season),
+                CONSTRAINT fk_team
+                    FOREIGN KEY(team_id, season) 
+                        REFERENCES team(team_id, season)
+            );"""
+    cursor.execute(sql)
+
+
+def create_model_table(cursor):
+    sql = """CREATE TABLE model(
+                model_id varchar(36) NOT NULL,
+                clf_model_object bytea NOT NULL,
+                reg_model_object bytea NOT NULL,
+                clf varchar(50) NOT NULL,
+                reg varchar(50) NOT NULL,
+                clf_params varchar(200) NOT NULL,
+                reg_params varchar(200) NOT NULL,
+                precision_avg float NOT NULL,
+                recall_avg float NOT NULL,
+                fscore_avg float NOT NULL,
+                rmse_avg float NOT NULL,
+                precision_2006 float NOT NULL,
+                recall_2006 float NOT NULL,
+                fscore_2006 float NOT NULL,
+                rmse_2006 float NOT NULL,
+                precision_2007 float NOT NULL,
+                recall_2007 float NOT NULL,
+                fscore_2007 float NOT NULL,
+                rmse_2007 float NOT NULL,
+                precision_2008 float NOT NULL,
+                recall_2008 float NOT NULL,
+                fscore_2008 float NOT NULL,
+                rmse_2008 float NOT NULL,
+                precision_2009 float NOT NULL,
+                recall_2009 float NOT NULL,
+                fscore_2009 float NOT NULL,
+                rmse_2009 float NOT NULL,
+                precision_2010 float NOT NULL,
+                recall_2010 float NOT NULL,
+                fscore_2010 float NOT NULL,
+                rmse_2010 float NOT NULL,
+                precision_2011 float NOT NULL,
+                recall_2011 float NOT NULL,
+                fscore_2011 float NOT NULL,
+                rmse_2011 float NOT NULL,
+                precision_2012 float NOT NULL,
+                recall_2012 float NOT NULL,
+                fscore_2012 float NOT NULL,
+                rmse_2012 float NOT NULL,
+                precision_2013 float NOT NULL,
+                recall_2013 float NOT NULL,
+                fscore_2013 float NOT NULL,
+                rmse_2013 float NOT NULL,
+                precision_2014 float NOT NULL,
+                recall_2014 float NOT NULL,
+                fscore_2014 float NOT NULL,
+                rmse_2014 float NOT NULL,
+                precision_2015 float NOT NULL,
+                recall_2015 float NOT NULL,
+                fscore_2015 float NOT NULL,
+                rmse_2015 float NOT NULL,
+                precision_2016 float NOT NULL,
+                recall_2016 float NOT NULL,
+                fscore_2016 float NOT NULL,
+                rmse_2016 float NOT NULL,
+                precision_2017 float NOT NULL,
+                recall_2017 float NOT NULL,
+                fscore_2017 float NOT NULL,
+                rmse_2017 float NOT NULL,
+                precision_2018 float NOT NULL,
+                recall_2018 float NOT NULL,
+                fscore_2018 float NOT NULL,
+                rmse_2018 float NOT NULL,
+                precision_2019 float NOT NULL,
+                recall_2019 float NOT NULL,
+                fscore_2019 float NOT NULL,
+                rmse_2019 float NOT NULL,
+                precision_2020 float NOT NULL,
+                recall_2020 float NOT NULL,
+                fscore_2020 float NOT NULL,
+                rmse_2020 float NOT NULL,
+                precision_2021 float NOT NULL,
+                recall_2021 float NOT NULL,
+                fscore_2021 float NOT NULL,
+                rmse_2021 float NOT NULL,
+                PRIMARY KEY (model_id)
+            );"""
+    cursor.execute(sql)
+
+
 def main(cursor):
-    create_player_table(cursor)
-    create_team_table(cursor)
+    # create_player_table(cursor)
+    # create_team_table(cursor)
+    # create_prediction_table(cursor)
+    create_model_table(cursor)
 
 
 if __name__ == "__main__":
@@ -126,7 +228,7 @@ if __name__ == "__main__":
     conn.autocommit = True
     cursor = conn.cursor()
 
-    # main(cursor)
+    main(cursor)
 
     conn.commit()
     conn.close()
