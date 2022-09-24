@@ -54,9 +54,9 @@ def get_sports_ref_data(cursor, years=range(2000, 2022)):
             # Notre Dame & BYU independents from 2011 on (minus 2020)
             # Only Notre Dame prior to 2011
             if conf == "independents" and year == 2020:
-                conf_teams = ["BYU"]
+                conf_teams = ["Brigham-Young"]
             elif conf == "independents" and year > 2010:
-                conf_teams = ["Notre-Dame", "BYU"]
+                conf_teams = ["Notre-Dame", "Brigham-Young"]
             elif conf == "independents":
                 conf_teams = ["Notre-Dame"]
 
@@ -190,6 +190,8 @@ def get_sports_ref_data(cursor, years=range(2000, 2022)):
                     except:
                         pass
 
+                # remove duplicates
+                dedup_players = [dict(t) for t in {tuple(d.items()) for d in players}]
                 # write to db
                 columns = players[0].keys()
                 query = """INSERT INTO player ({}) VALUES %s 
@@ -254,7 +256,9 @@ def get_sports_ref_data(cursor, years=range(2000, 2022)):
                         """.format(
                     ",".join(columns)
                 )
-                values = [[value for value in player.values()] for player in players]
+                values = [
+                    [value for value in player.values()] for player in dedup_players
+                ]
                 execute_values(cursor, query, values)
                 conn.commit()
 
