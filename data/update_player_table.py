@@ -19,7 +19,7 @@ def get_settings():
     return settings_data
 
 
-def get_heisman_votes_data(cursor, years=range(2009, 2022)):
+def get_heisman_votes_data(cursor, years=range(2000, 2022)):
     for year in years:
         page = requests.get(
             f"https://www.sports-reference.com/cfb/awards/heisman-{year}.html"
@@ -265,82 +265,15 @@ def get_sports_ref_data(cursor, years=range(2000, 2022)):
                 players = []
 
 
-# def get_cfbd_data(cursor, year):
-#     # Configure API key authorization: ApiKeyAuth
-#     configuration = cfbd.Configuration()
-#     configuration.api_key[
-#         "Authorization"
-#     ] = "S1+WAx+zu3+ab1Ueby09xmc2Wr5F54159c2WnvuoLxHot9wfOsVkRnnYDv+NahVc"
-#     configuration.api_key_prefix["Authorization"] = "Bearer"
-
-#     # create an instance of the API class
-#     player_api_instance = cfbd.PlayersApi(cfbd.ApiClient(configuration))
-#     metrics_api_instance = cfbd.MetricsApi(cfbd.ApiClient(configuration))
-
-#     # get player ids
-
-#     for idx, row in df.iterrows():
-#         search_term = row["name"]
-#         year = row["season"]
-#         team = row["team"]
-#         position = row["position"]
-
-#     # find player id
-#     try:
-#         api_response = player_api_instance.player_search(
-#             search_term, position=position, team=team, year=year
-#         )
-#         player_id = api_response[0]["id"]
-#         row["playerId"] = player_id
-
-#         # get usage stats
-#         try:
-#             api_response = player_api_instance.get_player_usage(
-#                 playerId=player_id, year=year, team=team, position=position
-#             )
-#             row["usage_overall"] = api_response[0]["usage"]["overall"]
-#             row["usage_pass"] = api_response[0]["usage"]["pass"]
-#             row["usage_rush"] = api_response[0]["usage"]["rush"]
-#             row["usage_firstDown"] = api_response[0]["usage"]["firstDown"]
-#             row["usage_secondDown"] = api_response[0]["usage"]["secondDown"]
-#             row["usage_thirdDown"] = api_response[0]["usage"]["thirdDown"]
-#             row["usage_standardDowns"] = api_response[0]["usage"]["standardDowns"]
-#             row["usage_passingDowns"] = api_response[0]["usage"]["passingDowns"]
-#         except ApiException as e:
-#             print("Exception when calling PlayersApi->get_player_usage: %s\n" % e)
-
-#         # get predicted points added stats (PPA)
-#         try:
-#             api_response = metrics_api_instance.get_player_season_ppa(
-#                 playerId=player_id, year=year, team=team, position=position
-#             )
-#             row["averagePPA_all"] = api_response[0]["averagePPA"]["all"]
-#             row["averagePPA_pass"] = api_response[0]["averagePPA"]["pass"]
-#             row["averagePPA_rush"] = api_response[0]["averagePPA"]["rush"]
-#             row["averagePPA_firstDown"] = api_response[0]["averagePPA"]["firstDown"]
-#             row["averagePPA_secondDown"] = api_response[0]["averagePPA"]["secondDown"]
-#             row["averagePPA_thirdDown"] = api_response[0]["averagePPA"]["thirdDown"]
-#             row["averagePPA_standardDowns"] = api_response[0]["averagePPA"][
-#                 "standardDowns"
-#             ]
-#             row["averagePPA_passingDowns"] = api_response[0]["averagePPA"][
-#                 "passingDowns"
-#             ]
-#         except ApiException as e:
-#             print("Exception when calling PlayersApi->get_player_usage: %s\n" % e)
-
-#     except ApiException as e:
-#         print("Exception when calling PlayersApi->player_search: %s\n" % e)
-
-
 def main(cursor, years=None):
-    if years:
+    if len(years) == 1:
+        get_sports_ref_data(cursor, years)
+    elif years:
         get_sports_ref_data(cursor, years)
         get_heisman_votes_data(cursor, years)
     else:
         get_sports_ref_data(cursor)
         get_heisman_votes_data(cursor)
-    # get_cfbd_data(cursor, year)
 
 
 if __name__ == "__main__":
