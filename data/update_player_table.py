@@ -3,8 +3,6 @@ import psycopg2
 from psycopg2.extras import execute_values
 from sportsipy.ncaaf.teams import Team
 from sportsipy.ncaaf.conferences import Conference
-import cfbd
-from cfbd.rest import ApiException
 import requests
 from bs4 import BeautifulSoup
 import yaml
