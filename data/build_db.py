@@ -207,9 +207,9 @@ def create_model_table(cursor):
 
 
 def main(cursor):
-    # create_player_table(cursor)
-    # create_team_table(cursor)
-    # create_prediction_table(cursor)
+    create_player_table(cursor)
+    create_team_table(cursor)
+    create_prediction_table(cursor)
     create_model_table(cursor)
 
 
@@ -223,7 +223,6 @@ if __name__ == "__main__":
         user=config["db"]["user"],
         password=config["db"]["password"],
         host=config["db"]["host"],
-        port=config["db"]["port"],
     )
     conn.autocommit = True
     cursor = conn.cursor()

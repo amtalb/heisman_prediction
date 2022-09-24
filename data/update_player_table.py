@@ -284,7 +284,6 @@ if __name__ == "__main__":
         user=config["db"]["user"],
         password=config["db"]["password"],
         host=config["db"]["host"],
-        port=config["db"]["port"],
     )
     conn.autocommit = True
     cursor = conn.cursor()

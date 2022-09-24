@@ -25,9 +25,8 @@ def connect_to_db(secrets):
     user = secrets["db"]["user"]
     password = secrets["db"]["password"]
     host = secrets["db"]["host"]
-    port = secrets["db"]["port"]
 
-    url = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}"
+    url = f"postgresql+psycopg2://{user}:{password}@{host}/{database}"
     engine = sqlalchemy.create_engine(url)
 
     return engine
