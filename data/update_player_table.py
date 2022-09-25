@@ -85,8 +85,6 @@ def get_sports_ref_data(cursor, years=range(2000, 2022)):
                             "season": player(str(year)).season,
                             "team_abbreviation": team_abbrev,
                             "position": player(str(year)).position,
-                            "height": player(str(year)).height,
-                            "weight": player(str(year)).weight,
                             "year": player(str(year)).year,
                             "games": player(str(year)).games,
                             "completed_passes": player(str(year)).completed_passes,

@@ -58,8 +58,6 @@ def retrieve_data(engine):
     df = pd.DataFrame(query.fetchall())
 
     df = df.T.drop_duplicates().T
-    df = df.drop("height", axis=1)
-    df = df.drop("usage_overall", axis=1)
     df = df.convert_dtypes()
 
     return df
@@ -84,8 +82,6 @@ def run_model(df, clf_model, reg_model):
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-
-        line = ""
 
         for test_year in range(2006, 2022):
             # separate out training/test for time series data
