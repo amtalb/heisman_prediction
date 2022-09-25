@@ -1,27 +1,18 @@
 from fastapi import FastAPI
-from pathlib import Path
-import yaml
+import os
 import sqlalchemy
+import uvicorn
+import psycopg2
 
 app = FastAPI()
 
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/predictions/")
-def read_item():
-    # from https://stackoverflow.com/a/63170705
-    full_file_path = Path(__file__).parent.joinpath("../config.yml")
-    with open(full_file_path) as settings:
-        secrets = yaml.load(settings, Loader=yaml.Loader)
-
-    database = secrets["db"]["database"]
-    user = secrets["db"]["user"]
-    password = secrets["db"]["password"]
-    host = secrets["db"]["host"]
+    database = os.environ.get("DATABASE")
+    user = os.environ.get("DB_USER")
+    password = os.environ.get("DB_PASSWORD")
+    host = os.environ.get("DB_HOST")
 
     url = f"postgresql+psycopg2://{user}:{password}@{host}/{database}"
     engine = sqlalchemy.create_engine(url)
@@ -35,3 +26,7 @@ def read_item():
         query = conn.execute(sql)
 
     return query.fetchall()
+
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
