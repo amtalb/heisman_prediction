@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-import psycopg2
 from pathlib import Path
 import yaml
 import sqlalchemy
