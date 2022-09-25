@@ -5,6 +5,8 @@ import yaml
 import sqlalchemy
 from sqlalchemy import text
 import matplotlib.pyplot as plt
+import requests
+import re
 
 st.title("2022 Heisman predictions")
 
@@ -34,25 +36,8 @@ def connect_to_db(secrets):
 
 @st.cache
 def load_data():
-    secrets = get_yaml(secrets_filename)
-    engine = connect_to_db(secrets)
-
-    sql = """
-        select *
-        from player p 
-        inner join team t
-            on p.team_abbreviation = t.team_id 
-            and p.season = t.season;
-    """
-    with engine.connect().execution_options(autocommit=True) as conn:
-        query = conn.execute(text(sql))
-
-    df = pd.DataFrame(query.fetchall())
-
-    df = df.T.drop_duplicates().T
-    df = df.drop("height", axis=1)
-    df = df.drop("usage_overall", axis=1)
-    df = df.convert_dtypes()
+    response = requests.get("http://127.0.0.1:8000/predictions/")
+    df = pd.DataFrame.from_dict(response.json())
 
     return df
 
@@ -63,7 +48,20 @@ data_load_state.text("")
 
 st.subheader("Leaderboard")
 
-top_15_data = data.sort_values(by=["votes"], ascending=False).head(15)
-
-st.pyplot(plt.plot(top_15_data["votes"]))
-st.dataframe(top_15_data.style.hide_index().format(precision=2))
+top_15_data = data.sort_values(by=["projected_votes"], ascending=False).head(15)
+top_15_data["player_id"] = [
+    re.sub(r"[0-9]", "", str(x)).replace("-", " ").title()
+    for x in top_15_data["player_id"]
+]
+top_15_data = top_15_data.reset_index()
+top_15_data.index += 1
+top_15_data = top_15_data.drop(["index", "season"], axis=1)
+top_15_data.rename(
+    columns={
+        "player_id": "Player",
+        "team_id": "Team",
+        "projected_votes": "Projected Votes",
+    },
+    inplace=True,
+)
+st.dataframe(top_15_data.style.format(precision=0))
