@@ -35,4 +35,4 @@ def read_item():
     with engine.connect().execution_options(autocommit=True) as conn:
         query = conn.execute(sql)
 
-    return {query.fetchall()}
+    return query.fetchall()
